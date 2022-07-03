@@ -1,0 +1,92 @@
+
+#include <LiquidCrystal.h> //Lcd 1602 Module
+#include <SR04.h> // UltraSonic Sensor Module
+
+#define TRIG_PIN 4  // For SR04 - Trigger Pin
+#define ECHO_PIN 3  // For SR04 - Echo Pin
+
+SR04 sr04 = SR04(ECHO_PIN,TRIG_PIN);
+long a;
+
+LiquidCrystal lcd(7, 8, 9, 10, 11, 12); // Define the pins
+int buzzer = 13;  // Pin Allocate to Active Buzzer
+
+void setup() {
+  
+  // set up the LCD's number of columns and rows:
+  lcd.begin(16, 2);
+  
+  // Print a message to the LCD.
+  lcd.print("Distance Sensor");
+  
+  pinMode(buzzer,OUTPUT);
+}
+
+void loop() {
+  
+   unsigned char i;
+   
+  // set the cursor to column 0, line 1
+  lcd.setCursor(0, 1);
+  
+  digitalWrite(buzzer,LOW); // Loop starts LOW (Mute)
+  
+   a = sr04.Distance();
+   
+   if( a <500 ){
+    
+      lcd.print(a);
+      lcd.print("cm            ");
+   
+   }
+   
+   else{
+    
+      lcd.print("No Detection");
+   
+   }
+
+   if(a <10 && a >= 0){
+    
+      digitalWrite(buzzer,HIGH);
+      
+   }
+   
+   else if(a <20 && a >= 10){
+    
+      digitalWrite(buzzer,HIGH);
+      delay(50);
+      digitalWrite(buzzer,LOW);
+      delay(2);
+      
+   }
+   
+   else if(a <30 && a >= 20){
+    
+      digitalWrite(buzzer,HIGH);
+      delay(100);
+      digitalWrite(buzzer,LOW);
+      delay(2);
+      
+   }
+   
+   else if(a <50 && a >= 30){
+    
+      digitalWrite(buzzer,HIGH);
+      delay(200);
+      digitalWrite(buzzer,LOW);
+      delay(2);
+      
+   }
+   else if(a <70 && a >= 50){
+    
+      digitalWrite(buzzer,HIGH);
+      delay(300);
+      digitalWrite(buzzer,LOW);
+      delay(2);
+      
+   }
+   
+   delay(50);
+   
+}
